@@ -12,6 +12,7 @@ mongoose.connect(db_uri).then(() => {
     console.error('Error connecting to MongoDB:', err);
     process.exit(1);
 });
+const User = require('./models/user.model');
 
 
 
@@ -24,16 +25,38 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/./views/index.html');
 });
 
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + '/./views/registrationForm.html');
+});
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/./views/loginForm.html');
+});
+
 //Registering the user
-app.post("/register", (req, res) => {
+app.post("/register", async(req, res) => {
     const { email, password } = req.body;    
-    res.status(201).json({email,password});
+    try {
+        const newUser = new User({ email, password });
+        await newUser.save();
+        res.status(201).json(newUser);
+        res.sendFile(__dirname + '/./views/registrationSuccess.html');
+    } catch (error) {
+        res.status(500).json({message: "Server error"});
+        res.sendFile(__dirname + '/./views/404.html');
+    }
 });
 
 //User login
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;    
-    res.status(200).json({messate: "Login successful", email});
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email }); 
+    if (user != null && user.password === password){
+        console.log("Login successful");
+        res.status(200).json({messate: "Login successful", email}).sendFile(__dirname + '/./views/registrationSuccess.html');
+        //res.sendFile(__dirname + '/./views/registrationSuccess.html');
+    }else{
+        res.status(401).json({message: "Invalid email or password"}).sendFile(__dirname + '/./views/404.html');
+    }    
 });
 
 
