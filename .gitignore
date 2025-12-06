@@ -1,0 +1,36 @@
+# Dependencies
+/node_modules
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.log
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+/coverage
+
+# Environment
+.env
+.env.development
+.env.test
+.env.production
+
+# Optional files for tools
+.vscode
+
+# Build/Dist folders (if they were present)
+/dist
+/build
+
+# Local/OS files
+.DS_Store
+Thumbs.db
