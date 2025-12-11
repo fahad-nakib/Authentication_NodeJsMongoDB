@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 
+
 const db_uri = process.env.MONGO_URI;
 const mongoose = require('mongoose');
 mongoose.connect(db_uri).then(() => {
@@ -31,18 +32,21 @@ app.get('/register', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/./views/loginForm.html');
 });
+app.get('/registrationSuccess', (req, res) => {
+    res.sendFile(__dirname + '/./views/registrationSuccess.html');
+});
 
 //Registering the user
 app.post("/register", async(req, res) => {
-    const { email, password } = req.body;    
+    http://localhost:4000/register
     try {
         const newUser = new User({ email, password });
         await newUser.save();
         res.status(201).json(newUser);
         res.sendFile(__dirname + '/./views/registrationSuccess.html');
     } catch (error) {
-        res.status(500).json({message: "Server error"});
-        res.sendFile(__dirname + '/./views/404.html');
+        //res.status(500).json({message: "Server error"});
+        res.status(500).sendFile(__dirname + '/./views/404.html');
     }
 });
 
