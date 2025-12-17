@@ -491,6 +491,44 @@
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
                 submitBtn.disabled = true;
+
+                // async function handleLogin(email, password) {
+                //     try {
+                //         // 1. Show loading state on button
+                //         submitBtn.innerHTML = 'Logging in...';
+                //         submitBtn.disabled = true;
+
+                //         // 2. Make the real API call
+                //         const response = await fetch('http://localhost:4000/login', {
+                //             method: 'POST',
+                //             headers: { 'Content-Type': 'application/json' },
+                //             body: JSON.stringify({ email, password })
+                //         });
+
+                //         const data = await response.json();
+
+                //         if (response.ok) {
+                //             // 1. Store the token
+                //             localStorage.setItem('userToken', data.token);
+
+                //             // UI Feedback
+                //             submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                //             submitBtn.style.background = '#4CAF50';
+
+                //             // 2. Redirect the user to the new page
+                //             window.location.href = '/registrationSuccess.html';                        
+
+                //         } else {
+                //             // Handle errors (e.g., "Wrong password")
+                //             throw new Error(data.message || 'Login failed');
+                //             //window.location.href = '/404.html'; 
+                //         }
+                //     } catch (error) {
+                //         alert(error.message);
+                //         submitBtn.innerHTML = 'Login';
+                //         submitBtn.disabled = false;
+                //     }
+                // }
                 
                 try {
                     // Make POST request to server
@@ -500,10 +538,12 @@
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            email: email,
-                            password: password
+                            email,
+                            password
                         })
                     });
+                    console.log('Fetch response:');
+                    console.log(response);
                     
                     // Parse the response
                     const data = await response.json();
@@ -512,19 +552,14 @@
                         // Success - show success message
                         submitBtn.innerHTML = '<i class="fas fa-check"></i> Account Created!';
                         submitBtn.style.background = '#4CAF50';
-                        
-                        // Store data locally if needed
-                        localStorage.setItem('registeredEmail', email);
-                        localStorage.setItem('registeredUser', JSON.stringify(data.user || {}));
-                        
-                        // Redirect after success
-                        setTimeout(() => {
-                            if (data.redirect) {
-                                window.location.href = data.redirect;
-                            } else {
-                                window.location.href = 'http://localhost:4000/registrationSuccess';
-                            }
-                        }, 1500);
+                        console.log('Registration successful:', data);
+                        // 1. Store the token
+                        localStorage.setItem('userToken', data.token);
+                        localStorage.setItem('userEmail', data.email);
+                        localStorage.setItem('userPassword', data.password);
+
+                        // 2. Redirect the user to the new page
+                        window.location.href = 'registrationSuccess';  
                         
                     } else {
                         // Show error from server
@@ -535,7 +570,7 @@
                     }
                     
                 } catch (error) {
-                    console.error('Error:', error);
+                    console.log('Error:', error);
                     
                     // Network error or server down
                     showError('Unable to connect to server. Please check your connection.');

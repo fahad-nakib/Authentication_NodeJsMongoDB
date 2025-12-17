@@ -358,11 +358,20 @@
     </div>
 
     <script>
+        console.log('Registration Success Page Loaded');
+        const token = localStorage.getItem('userToken');
+        console.log('User Token:', token);
+
+        if (!token) {
+            // If no token exists, kick them back to the login pageviews
+            alert("Please login first!");
+            window.location.href = 'loginForm.html';
+        }
         document.addEventListener('DOMContentLoaded', function() {
             // Simulate getting user data
             const userData = {
-                email: localStorage.getItem('registeredEmail') || 'user@example.com',
-                password: localStorage.getItem('registeredPassword') || 'SecurePass123',
+                email: localStorage.getItem('userEmail') || 'user@example.com',
+                password: localStorage.getItem('userPassword') || 'SecurePass123',
                 userId: 'AUTH#' + Math.floor(100000 + Math.random() * 900000),
                 registrationDate: new Date().toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -409,7 +418,8 @@
                 // Simulate redirect
                 setTimeout(() => {
                     alert('Redirecting to dashboard...');
-                    // In real app: window.location.href = 'dashboard.html';
+                    // In real app: 
+                    window.location.href = '/';
                     this.innerHTML = '<i class="fas fa-tachometer-alt"></i> Go to Dashboard';
                     this.disabled = false;
                 }, 1500);
@@ -417,12 +427,13 @@
             
             document.getElementById('backToHome').addEventListener('click', function() {
                 // Clear registration data
-                localStorage.removeItem('registeredEmail');
-                localStorage.removeItem('registeredPassword');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userPassword');
                 
                 // Redirect to home
                 alert('Returning to home page...');
-                // In real app: window.location.href = 'index.html';
+                // In real app: 
+                window.location.href = '/';
             });
         });
     </script>
